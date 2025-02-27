@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budgeting App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .progress {
+            height: 30px;
+            background: #f3f3f3;
+            border-radius: 5px;
+            margin: 10px 0;
+            position: relative;
+        }
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: green;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Budgeting App</h2>
+        <label>Budget Goal: $<input type="number" id="budget" value="1000"></label>
+        <br><br>
+        <label>Amount: $<input type="number" id="amount"></label>
+        <button onclick="addExpense()">Add Expense</button>
+        <button onclick="addIncome()">Add Income</button>
+        
+        <h3>Remaining Budget: $<span id="remaining">1000</span></h3>
+        
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+    </div>
+    
+    <script>
+        let budget = 1000;
+        let remaining = 1000;
+
+        function updateProgress() {
+            let progress = ((budget - remaining) / budget) * 100;
+            document.getElementById("progressBar").style.width = progress + "%";
+        }
+
+        function addExpense() {
+            let amount = parseFloat(document.getElementById("amount").value);
+            if (!isNaN(amount) && amount > 0 && remaining - amount >= 0) {
+                remaining -= amount;
+                document.getElementById("remaining").innerText = remaining;
+                updateProgress();
+            }
+        }
+
+        function addIncome() {
+            let amount = parseFloat(document.getElementById("amount").value);
+            if (!isNaN(amount) && amount > 0) {
+                remaining += amount;
+                if (remaining > budget) remaining = budget;
+                document.getElementById("remaining").innerText = remaining;
+                updateProgress();
+            }
+        }
+    </script>
+</body>
+</html>
