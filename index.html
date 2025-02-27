@@ -54,16 +54,16 @@
         }
     </style>
 </head>
-<body>
+<body onload="loadData()">
     <div class="container">
         <h2>Budgeting App</h2>
-        <label>Budget Goal: $<input type="number" id="budget" value="1000" onchange="updateBudget()"></label>
+        <label>Budget Goal: $<input type="number" id="budget" onchange="updateBudget()"></label>
         <br><br>
         <label>Amount: $<input type="number" id="amount"></label>
         <button onclick="addExpense()">Add Expense</button>
         <button onclick="addIncome()">Add Income</button>
         
-        <h3>Remaining Budget: $<span id="remaining">1000</span></h3>
+        <h3>Remaining Budget: $<span id="remaining"></span></h3>
         
         <div class="progress">
             <div class="progress-bar" id="progressBar"></div>
@@ -71,13 +71,24 @@
     </div>
     
     <script>
-        let budget = 1000;
-        let remaining = 1000;
+        function saveData() {
+            localStorage.setItem("budget", budget);
+            localStorage.setItem("remaining", remaining);
+        }
+
+        function loadData() {
+            budget = parseFloat(localStorage.getItem("budget")) || 1000;
+            remaining = parseFloat(localStorage.getItem("remaining")) || budget;
+            document.getElementById("budget").value = budget;
+            document.getElementById("remaining").innerText = remaining;
+            updateProgress();
+        }
 
         function updateBudget() {
             budget = parseFloat(document.getElementById("budget").value);
             remaining = budget;
             document.getElementById("remaining").innerText = remaining;
+            saveData();
             updateProgress();
         }
 
@@ -91,6 +102,7 @@
             if (!isNaN(amount) && amount > 0 && remaining - amount >= 0) {
                 remaining -= amount;
                 document.getElementById("remaining").innerText = remaining;
+                saveData();
                 updateProgress();
             }
         }
@@ -101,6 +113,7 @@
                 remaining += amount;
                 if (remaining > budget) remaining = budget;
                 document.getElementById("remaining").innerText = remaining;
+                saveData();
                 updateProgress();
             }
         }
