@@ -7,15 +7,18 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            color: white;
             text-align: center;
             padding: 20px;
         }
         .container {
             max-width: 400px;
             margin: auto;
-            border: 1px solid #ccc;
-            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
         }
         .progress {
             height: 30px;
@@ -23,19 +26,38 @@
             border-radius: 5px;
             margin: 10px 0;
             position: relative;
+            overflow: hidden;
         }
         .progress-bar {
             height: 100%;
             width: 0%;
-            background: green;
+            background: limegreen;
+            transition: width 0.5s ease-in-out;
+        }
+        input, button {
+            padding: 10px;
+            margin: 5px;
+            border: none;
             border-radius: 5px;
+        }
+        input {
+            width: 80px;
+        }
+        button {
+            cursor: pointer;
+            background: #ff5722;
+            color: white;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #e64a19;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>Budgeting App</h2>
-        <label>Budget Goal: $<input type="number" id="budget" value="1000"></label>
+        <label>Budget Goal: $<input type="number" id="budget" value="1000" onchange="updateBudget()"></label>
         <br><br>
         <label>Amount: $<input type="number" id="amount"></label>
         <button onclick="addExpense()">Add Expense</button>
@@ -51,6 +73,13 @@
     <script>
         let budget = 1000;
         let remaining = 1000;
+
+        function updateBudget() {
+            budget = parseFloat(document.getElementById("budget").value);
+            remaining = budget;
+            document.getElementById("remaining").innerText = remaining;
+            updateProgress();
+        }
 
         function updateProgress() {
             let progress = ((budget - remaining) / budget) * 100;
